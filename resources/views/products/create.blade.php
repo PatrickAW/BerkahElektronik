@@ -1,46 +1,48 @@
 @extends('products.layout')
   
 @section('content')
-
-<div class="card mt-5">
-  <h2 class="card-header">Add New Product</h2>
-  <div class="card-body">
-
-    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-        <a class="btn btn-primary btn-sm" href="{{ route('products.index') }}"><i class="fa fa-arrow-left"></i> Back</a>
+<div class="row">
+    <div class="col-lg-12 margin-tb">
+        <div class="pull-left">
+            <h2>Add New Product</h2>
+        </div>
+        <div class="pull-right">
+            <a class="btn btn-primary" href="{{ route('products.index') }}"> Back</a>
+        </div>
     </div>
-
-    <form action="{{ route('products.store') }}" method="POST">
-        @csrf
-
-        <div class="mb-3">
-            <label for="inputName" class="form-label"><strong>Name:</strong></label>
-            <input 
-                type="text" 
-                name="name" 
-                class="form-control @error('name') is-invalid @enderror" 
-                id="inputName" 
-                placeholder="Name">
-            @error('name')
-                <div class="form-text text-danger">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <div class="mb-3">
-            <label for="inputDetail" class="form-label"><strong>Detail:</strong></label>
-            <textarea 
-                class="form-control @error('detail') is-invalid @enderror" 
-                style="height:150px" 
-                name="detail" 
-                id="inputDetail" 
-                placeholder="Detail"></textarea>
-            @error('detail')
-                <div class="form-text text-danger">{{ $message }}</div>
-            @enderror
-        </div>
-        <button type="submit" class="btn btn-success"><i class="fa-solid fa-floppy-disk"></i> Submit</button>
-    </form>
-
-  </div>
 </div>
+   
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <strong>Whoops!</strong> There were some problems with your input.<br><br>
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+   
+<form action="{{ route('products.store') }}" method="POST">
+    @csrf
+  
+     <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="form-group">
+                <strong>Name:</strong>
+                <input type="text" name="name" class="form-control" placeholder="Name">
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="form-group">
+                <strong>Detail:</strong>
+                <textarea class="form-control" style="height:150px" name="detail" placeholder="Detail"></textarea>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+                <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </div>
+   
+</form>
 @endsection

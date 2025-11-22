@@ -1,82 +1,90 @@
 <?php
-  
+
 namespace App\Http\Controllers;
-  
+
 use App\Models\Product;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\View\View;
-use App\Http\Requests\ProductStoreRequest;
-use App\Http\Requests\ProductUpdateRequest;
-  
+
 class ProductController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of products.
      */
-    public function index(): View
+    public function index(Request $request)
     {
+        if ($request->ajax()) {
+            $page = $request->input('page', 1);
+            $rows = $request->input('rows', 10);
+
+            $query = Product::query();
+            $total = $query->count();
+
+            $products = $query->skip(($page - 1) * $rows)->take($rows)->get();
+
+            return response()->json([
+                'total' => $total,
+                'rows'  => $products
+            ]);
+        }
+
         $products = Product::latest()->paginate(5);
-        
         return view('products.index', compact('products'))
-                    ->with('i', (request()->input('page', 1) - 1) * 5);
+            ->with('i', (request()->input('page', 1) - 1) * 5);
     }
-  
+
     /**
-     * Show the form for creating a new resource.
+     * Store a newly created product (POST).
      */
-    public function create(): View
+    public function store(Request $request)
     {
-        return view('products.create');
+        $validated = $request->validate([
+            'name'   => 'required|string|max:255',
+            'detail' => 'required|string',
+        ]);
+
+        $product = Product::create($validated);
+
+        return $request->ajax()
+            ? response()->json(['success' => true, 'message' => 'Product created', 'data' => $product])
+            : redirect()->route('products.index')->with('success', 'Product created successfully.');
     }
-  
+
     /**
-     * Store a newly created resource in storage.
+     * Display the specified product (GET /products/{id}).
      */
-    public function store(ProductStoreRequest $request): RedirectResponse
-    {   
-        Product::create($request->validated());
-         
-        return redirect()->route('products.index')
-                         ->with('success', 'Product created successfully.');
-    }
-  
-    /**
-     * Display the specified resource.
-     */
-    public function show(Product $product): View
+    public function show(Product $product)
     {
-        return view('products.show',compact('product'));
+        return request()->ajax()
+            ? response()->json($product)
+            : view('products.show', compact('product'));
     }
-  
+
     /**
-     * Show the form for editing the specified resource.
+     * Update the specified product (PUT/PATCH).
      */
-    public function edit(Product $product): View
+    public function update(Request $request, Product $product)
     {
-        return view('products.edit',compact('product'));
+        $validated = $request->validate([
+            'name'   => 'required|string|max:255',
+            'detail' => 'required|string',
+        ]);
+
+        $product->update($validated);
+
+        return $request->ajax()
+            ? response()->json(['success' => true, 'message' => 'Product updated'])
+            : redirect()->route('products.index')->with('success', 'Product updated successfully.');
     }
-  
+
     /**
-     * Update the specified resource in storage.
+     * Remove the specified product (DELETE).
      */
-    public function update(ProductUpdateRequest $request, Product $product): RedirectResponse
-    {
-        $product->update($request->validated());
-        
-        return redirect()->route('products.index')
-                        ->with('success','Product updated successfully');
-    }
-  
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Product $product): RedirectResponse
+    public function destroy(Product $product)
     {
         $product->delete();
-         
-        return redirect()->route('products.index')
-                        ->with('success','Product deleted successfully');
+
+        return request()->ajax()
+            ? response()->json(['success' => true, 'message' => 'Product deleted'])
+            : redirect()->route('products.index')->with('success', 'Product deleted successfully.');
     }
 }
