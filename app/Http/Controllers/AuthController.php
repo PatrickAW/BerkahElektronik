@@ -104,4 +104,32 @@ class AuthController extends Controller
 
         return redirect()->route('login')->with('success', 'You have logged out successfully.');
     }
+
+    // HALAMAN RESET PASSWORD LANGSUNG
+    public function resetPassword()
+    {
+        return view('auth.reset-password');
+    }
+
+    // UPDATE PASSWORD TANPA TOKEN / EMAIL LINK
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|min:6|confirmed'
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return back()->with('error', 'Email tidak ditemukan!');
+        }
+
+        $user->update([
+            'password' => Hash::make($request->password)
+        ]);
+
+        return redirect('/login')->with('success', 'Password berhasil direset!');
+    }
+
 }

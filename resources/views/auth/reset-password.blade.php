@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Toko Berkah Elektronik - Registrasi</title>
+  <title>Toko Berkah Elektronik - Reset Password</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
@@ -21,7 +21,7 @@
       line-height: 1.1;
     }
 
-    .register-section {
+    .reset-section {
       display: flex;
       justify-content: center;
       align-items: flex-start;
@@ -31,7 +31,7 @@
       padding-top: 60px;
     }
 
-    .register-text {
+    .reset-text {
       flex: 1;
       text-align: left;
       font-size: 2rem;
@@ -41,10 +41,15 @@
       transform: translateY(-20px);
     }
 
-    .register-form {
+    .reset-form {
       flex: 1;
       max-width: 420px;
       transform: translateY(-20px);
+    }
+
+    .form-label {
+      font-size: 14px;
+      color: #333;
     }
 
     input::placeholder {
@@ -52,7 +57,7 @@
       font-size: 14px;
     }
 
-    .btn-register {
+    .btn-reset {
       background-color: #2948ff;
       color: #fff;
       font-weight: 600;
@@ -60,11 +65,11 @@
       height: 48px;
     }
 
-    .btn-register:hover {
+    .btn-reset:hover {
       background-color: #1934d4;
     }
 
-    /* PERBAIKAN: Search bar memanjang sama seperti di login */
+    /* PERBAIKAN: Search bar memanjang sama seperti di halaman lain */
     .navbar-container {
       display: flex;
       align-items: center;
@@ -103,20 +108,20 @@
     }
 
     @media (max-width: 992px) {
-      .register-section {
+      .reset-section {
         flex-direction: column;
         text-align: center;
         gap: 40px;
         padding-top: 40px;
       }
 
-      .register-text {
+      .reset-text {
         text-align: center;
         font-size: 1.8rem;
         transform: none;
       }
 
-      .register-form {
+      .reset-form {
         width: 100%;
         max-width: 360px;
         transform: none;
@@ -178,64 +183,51 @@
     </div>
   </nav>
 
-  <!-- REGISTER SECTION -->
-  <section class="register-section container mt-5 mb-5">
+  <!-- RESET PASSWORD SECTION -->
+  <section class="reset-section container mt-5 mb-5">
 
-    <div class="register-text">
-      <p>Daftarkan akun<br>baru Anda</p>
+    <div class="reset-text">
+      <p>Lupa kata sandi?</p>
     </div>
 
-    <div class="register-form">
+    <div class="reset-form">
+      @if(session('error'))
+        <p class="text-danger">{{ session('error') }}</p>
+      @endif
 
-      <form method="POST" action="{{ route('register.post') }}">
+      @if(session('success'))
+        <p class="text-success">{{ session('success') }}</p>
+      @endif
+
+      <form method="POST" action="{{ url('/reset-password') }}">
         @csrf
 
-        <!-- Nama -->
+        {{-- Email --}}
         <div class="mb-3">
-          <label class="form-label">Nama Lengkap <span class="text-danger">*</span></label>
-          <input type="text" class="form-control" name="name" placeholder="Nama lengkap" required value="{{ old('name') }}">
-          @error('name')
-            <small class="text-danger">{{ $message }}</small>
-          @enderror
+          <label class="form-label">Email terdaftar <span class="text-danger">*</span></label>
+          <input type="email" name="email" class="form-control" required placeholder="email@example.com">
         </div>
 
-        <!-- Email -->
+        {{-- Password baru --}}
         <div class="mb-3">
-          <label class="form-label">Email <span class="text-danger">*</span></label>
-          <input type="email" class="form-control" name="email" placeholder="Email aktif" required value="{{ old('email') }}">
-          @error('email')
-            <small class="text-danger">{{ $message }}</small>
-          @enderror
+          <label class="form-label">Password Baru <span class="text-danger">*</span></label>
+          <input type="password" name="password" class="form-control" required placeholder="Password baru">
         </div>
 
-        <!-- Password -->
+        {{-- Konfirmasi --}}
         <div class="mb-3">
-          <label class="form-label">Kata Sandi <span class="text-danger">*</span></label>
-          <input type="password" class="form-control" name="password" placeholder="Kata sandi" required>
-          @error('password')
-            <small class="text-danger">{{ $message }}</small>
-          @enderror
+          <label class="form-label">Konfirmasi Password <span class="text-danger">*</span></label>
+          <input type="password" name="password_confirmation" class="form-control" required placeholder="Ulangi password">
         </div>
 
-        <!-- Confirm Password -->
-        <div class="mb-3">
-          <label class="form-label">Konfirmasi Kata Sandi <span class="text-danger">*</span></label>
-          <input type="password" class="form-control" name="password_confirmation" placeholder="Ulangi kata sandi" required>
-        </div>
-
-        <!-- Tombol -->
-        <div class="d-grid mb-3">
-          <button type="submit" class="btn btn-register">Daftar Sekarang</button>
-        </div>
-
-        <div class="text-center">
-          Sudah punya akun?
-          <a href="{{ route('login') }}" class="text-decoration-none fw-bold">Masuk</a>
+        {{-- Tombol --}}
+        <div class="d-grid">
+          <button type="submit" class="btn btn-reset">Reset Password</button>
         </div>
 
       </form>
-
     </div>
+
   </section>
 
 </body>

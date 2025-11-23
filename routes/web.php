@@ -26,3 +26,6 @@ Route::get('registration', [AuthController::class, 'registration'])->name('regis
 Route::post('post-registration', [AuthController::class, 'postRegistration'])->name('register.post'); 
 Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
 Route::get('logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/reset-password', [AuthController::class, 'resetPassword'])->name('reset.password');
+Route::post('/reset-password', [AuthController::class, 'updatePassword'])->name('reset.password.post');
+Route::get('/login', [AuthController::class, 'index'])->name('login');

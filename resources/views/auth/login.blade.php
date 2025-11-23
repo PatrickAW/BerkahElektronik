@@ -87,6 +87,44 @@
       background-color: #f8f8f8;
     }
 
+    /* PERBAIKAN: Search bar memanjang */
+    .navbar-container {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .navbar-left-section {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .category-text {
+      font-weight: bold;
+      color: #000;
+      font-size: 16px;
+    }
+
+    .navbar-center-section {
+      display: flex;
+      justify-content: center;
+      flex: 1;
+      margin: 0 40px;
+    }
+
+    .search-box {
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .navbar-right-section {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
     @media (max-width: 992px) {
       .login-section {
         flex-direction: column;
@@ -106,22 +144,59 @@
         max-width: 360px;
         transform: none;
       }
+
+      .navbar-container {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .navbar-left-section {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .navbar-center-section {
+        width: 100%;
+        order: 3;
+        margin: 0;
+      }
+
+      .navbar-right-section {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .search-box {
+        width: 100%;
+        max-width: 100%;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- Header -->
+  <!-- Header dengan search bar memanjang -->
   <nav class="navbar navbar-light bg-white border-bottom shadow-sm px-3">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">
-        TOKO BERKAH<br>ELEKTRONIK
-      </a>
-      <div class="d-flex align-items-center">
-        <span class="me-3 fw-bold">Kategori</span>
-        <input type="text" class="form-control form-control-sm me-3" style="width: 250px;" placeholder="Cari Elektronik">
-        <i class="bi bi-cart3 me-3"></i>
-        <i class="bi bi-person"></i>
+      <div class="navbar-container">
+        <!-- Bagian kiri: Logo + Kategori -->
+        <div class="navbar-left-section">
+          <a class="navbar-brand" href="#">
+            TOKO BERKAH<br>ELEKTRONIK
+          </a>
+          <span class="category-text">Kategori</span>
+        </div>
+
+        <!-- Bagian tengah: Search bar memanjang -->
+        <div class="navbar-center-section">
+          <input type="text" class="form-control form-control-sm search-box" placeholder="Cari Elektronik">
+        </div>
+
+        <!-- Bagian kanan: Icons -->
+        <div class="navbar-right-section">
+          <i class="bi bi-cart3" style="font-size: 1.2rem;"></i>
+          <i class="bi bi-person" style="font-size: 1.2rem;"></i>
+        </div>
       </div>
     </div>
   </nav>
@@ -154,7 +229,7 @@
             <input type="password" class="form-control" name="password" placeholder="Kata sandi" required>
             <span class="input-group-text bg-white border-start-0"><i class="bi bi-eye"></i></span>
           </div>
-          <div class="form-text"><a href="#" class="text-decoration-none text-secondary">Lupa kata sandi?</a></div>
+          <div class="form-text"><a href="{{ route('reset.password') }}" class="text-decoration-none text-secondary">Lupa kata sandi?</a></div>
           @error('password')
             <small class="text-danger">{{ $message }}</small>
           @enderror
