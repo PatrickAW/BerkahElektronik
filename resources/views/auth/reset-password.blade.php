@@ -163,7 +163,7 @@
       <div class="navbar-container">
         <!-- Bagian kiri: Logo + Kategori -->
         <div class="navbar-left-section">
-          <a class="navbar-brand" href="#">
+          <a class="navbar-brand" href="{{ route('login') }}">
             TOKO BERKAH<br>ELEKTRONIK
           </a>
           <span class="category-text">Kategori</span>
