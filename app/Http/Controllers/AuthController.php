@@ -41,7 +41,7 @@ class AuthController extends Controller
     $credentials = $request->only('email', 'password');
 
     if (Auth::attempt($credentials)) {
-        return redirect()->route('dashboard')
+        return redirect()->route('admin.dashboard')
                          ->with('success', 'You have successfully logged in!');
     }
 
@@ -66,7 +66,7 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        return redirect()->route('dashboard')->with('success', 'Great! You have successfully registered.');
+        return redirect()->route('admin.dashboard')->with('success', 'Great! You have successfully registered.');
     }
 
     /**

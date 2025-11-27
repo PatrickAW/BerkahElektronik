@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Toko Berkah Elektronik - Dashboard</title>
+  <title>Toko Berkah Elektronik - Dashboard Admin</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
@@ -222,7 +222,7 @@
       <div class="navbar-container">
         <!-- Bagian kiri: Logo + Kategori -->
         <div class="navbar-left-section">
-          <a class="navbar-brand" href="{{ route('dashboard') }}">
+          <a class="navbar-brand" href="{{ route('admin.dashboard') }}">
             TOKO BERKAH<br>ELEKTRONIK
           </a>
           <span class="category-text">Kategori</span>
