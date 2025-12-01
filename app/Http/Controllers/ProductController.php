@@ -7,10 +7,14 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
-use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
+   public function show(Product $product)
+    {
+        return redirect()->route('products.edit', $product);
+    }
+
     // ===================================================
     // LIST PRODUK
     // ===================================================
@@ -34,6 +38,25 @@ class ProductController extends Controller
             ->with('i', (request()->input('page', 1) - 1) * 20);
     }
 
+    // ===================================================
+    // PENCARIAN PRODUK DENGAN HIGHLIGHT
+    // ===================================================
+    public function search(Request $request): View
+    {
+        $keyword = $request->input('keyword', '');
+        
+        $products = Product::when($keyword, function ($query, $keyword) {
+            return $query->where('judul', 'like', '%' . $keyword . '%')
+                       ->orWhere('brand', 'like', '%' . $keyword . '%')
+                       ->orWhere('model', 'like', '%' . $keyword . '%');
+        })
+        ->latest()
+        ->paginate(20)
+        ->withQueryString();
+
+        return view('products.index', compact('products', 'keyword'))
+            ->with('i', (request()->input('page', 1) - 1) * 20);
+    }
 
     // ===================================================
     // TAMPILKAN FORM TAMBAH
@@ -59,20 +82,25 @@ class ProductController extends Controller
             'diskon'   => 'nullable|integer|min:0|max:100',
             'garansi'  => 'nullable|max:255',
             'detail'   => 'required',
-            'image'    => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image_url' => 'required|url|max:500', // Validasi URL gambar dari Drive
         ]);
 
-        // Upload gambar
-        $imageName = null;
-        if ($request->hasFile('image')) {
-            $imageName = time() . '.' . $request->image->extension();
-            $request->image->storeAs('products', $imageName, 'public');
-        }
+        // Konversi URL Google Drive ke format yang bisa di-embed
+        $imageUrl = $this->convertDriveUrl($request->image_url);
 
-        // Simpan data
-        $data = $request->except('image');
-        $data['image']  = $imageName;
-        $data['diskon'] = $request->diskon ?? 0;
+        // Simpan data - PASTIKAN SEMUA FIELD ADA
+        $data = [
+            'kategori' => $request->kategori,
+            'brand'    => $request->brand,
+            'judul'    => $request->judul,
+            'model'    => $request->model,
+            'stok'     => $request->stok,
+            'harga'    => $request->harga,
+            'diskon'   => $request->diskon ?? 0,
+            'garansi'  => $request->garansi,
+            'detail'   => $request->detail,
+            'image'    => $imageUrl,
+        ];
 
         Product::create($data);
 
@@ -104,27 +132,18 @@ class ProductController extends Controller
             'diskon'   => 'nullable|integer|min:0|max:100',
             'garansi'  => 'nullable|max:255',
             'detail'   => 'required',
-            'image'    => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image_url' => 'nullable|url|max:500', // Validasi URL gambar dari Drive
         ]);
 
-        // Data kecuali image & stok tambahan
-        $data = $request->except(['image', 'tambah_stok']);
+        // Data kecuali image_url & stok tambahan
+        $data = $request->except(['image_url', 'tambah_stok']);
 
         // Update stok
         $data['stok'] = $product->stok + ($request->tambah_stok ?? 0);
 
-        // Upload gambar baru jika ada
-        if ($request->hasFile('image')) {
-
-            // Hapus gambar lama
-            if ($product->image) {
-                Storage::disk('public')->delete('products/' . $product->image);
-            }
-
-            // Simpan gambar baru
-            $imageName = time() . '.' . $request->image->extension();
-            $request->image->storeAs('products', $imageName, 'public');
-            $data['image'] = $imageName;
+        // Update gambar jika ada URL baru
+        if ($request->has('image_url') && !empty($request->image_url)) {
+            $data['image'] = $this->convertDriveUrl($request->image_url);
         }
 
         // Default diskon
@@ -138,19 +157,54 @@ class ProductController extends Controller
     }
 
     // ===================================================
-    // HAPUS PRODUK + GAMBAR
+    // HAPUS PRODUK
     // ===================================================
     public function destroy(Product $product): RedirectResponse
     {
-        // Hapus file gambar
-        if ($product->image) {
-            Storage::disk('public')->delete('products/' . $product->image);
-        }
-
-        // Hapus data di database
+        // Hapus data di database (tidak perlu hapus file karena menggunakan URL Drive)
         $product->delete();
 
         return redirect()->route('products.index')
             ->with('success', 'Produk berhasil dihapus.');
+    }
+
+    // ===================================================
+    // FUNGSI UNTUK KONVERSI URL GOOGLE DRIVE
+    // ===================================================
+    private function convertDriveUrl($url)
+    {
+        // Jika URL kosong, return kosong
+        if (empty($url)) {
+            return $url;
+        }
+
+        // Jika sudah format googleusercontent, keep as is
+        if (str_contains($url, 'googleusercontent.com')) {
+            return $url;
+        }
+
+        // Extract file ID dari berbagai format
+        $fileId = null;
+        
+        // Format 1: https://drive.google.com/file/d/FILE_ID/view
+        if (preg_match('/\/file\/d\/([a-zA-Z0-9_-]+)/', $url, $matches)) {
+            $fileId = $matches[1];
+        }
+        // Format 2: https://drive.google.com/uc?id=FILE_ID
+        elseif (preg_match('/[?&]id=([a-zA-Z0-9_-]+)/', $url, $matches)) {
+            $fileId = $matches[1];
+        }
+        // Format 3: https://drive.google.com/open?id=FILE_ID
+        elseif (preg_match('/open\?id=([a-zA-Z0-9_-]+)/', $url, $matches)) {
+            $fileId = $matches[1];
+        }
+
+        // Jika dapat file ID, konversi ke googleusercontent
+        if ($fileId) {
+            return "https://lh3.googleusercontent.com/d/" . $fileId;
+        }
+
+        // Jika tidak match, return URL asli
+        return $url;
     }
 }
