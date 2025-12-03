@@ -34,7 +34,7 @@ class AuthController extends Controller
     public function postLogin(Request $request): RedirectResponse
 {
     $request->validate([
-        'email' => 'required|email',
+        'email' => 'required|email', // Hanya email, tanpa nomor HP
         'password' => 'required',
     ]);
 
@@ -46,7 +46,7 @@ class AuthController extends Controller
     }
 
     return redirect()->route('login')
-                     ->with('error', 'Invalid credentials');
+                     ->with('error', 'Email atau password salah');
 }
 
 

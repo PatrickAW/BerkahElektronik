@@ -1,252 +1,236 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Toko Berkah Elektronik - Login</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+@extends('products.layout')
 
-  <style>
-    body {
-      background-color: #fff;
-      font-family: Arial, sans-serif;
-    }
+@section('title', 'Toko Berkah Elektronik - Login')
 
-    .navbar-brand {
-      font-weight: 800;
-      color: #2948ff !important;
-      text-transform: uppercase;
-      line-height: 1.1;
-    }
-
-    .login-section {
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      min-height: 75vh;
-      gap: 80px;
-      flex-wrap: wrap;
-      padding-top: 60px;
-    }
-
-    .login-text {
-      flex: 1;
-      text-align: left;
-      font-size: 2rem;
-      font-weight: 700;
-      max-width: 400px;
-      color: #000;
-      transform: translateY(-20px);
-    }
-
-    .login-form {
-      flex: 1;
-      max-width: 420px;
-      transform: translateY(-20px);
-    }
-
-    .form-label {
-      font-size: 14px;
-      color: #333;
-    }
-
-    .form-text {
-      color: #6c757d;
-      font-size: 12px;
-      margin-top: 2px;
-    }
-
-    input::placeholder {
-      color: #b0b0b0;
-      font-size: 14px;
-    }
-
-    .btn-login {
-      background-color: #2948ff;
-      color: #fff;
-      font-weight: 600;
-      border-radius: 50px;
-      height: 48px;
-    }
-
-    .btn-login:hover {
-      background-color: #1934d4;
-    }
-
-    .btn-register {
-      border-radius: 50px;
-      border: 1.5px solid #000;
-      color: #000;
-      font-weight: 600;
-      height: 48px;
-      background: #fff;
-    }
-
-    .btn-register:hover {
-      background-color: #f8f8f8;
-    }
-
-    /* PERBAIKAN: Search bar memanjang */
-    .navbar-container {
-      display: flex;
-      align-items: center;
-      width: 100%;
-      justify-content: space-between;
-    }
-
-    .navbar-left-section {
-      display: flex;
-      align-items: center;
-      gap: 40px;
-    }
-
-    .category-text {
-      font-weight: bold;
-      color: #000;
-      font-size: 16px;
-    }
-
-    .navbar-center-section {
-      display: flex;
-      justify-content: center;
-      flex: 1;
-      margin: 0 40px;
-    }
-
-    .search-box {
-      width: 100%;
-      max-width: 600px;
-    }
-
-    .navbar-right-section {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-
-    @media (max-width: 992px) {
-      .login-section {
-        flex-direction: column;
-        text-align: center;
-        gap: 40px;
-        padding-top: 40px;
-      }
-
-      .login-text {
-        text-align: center;
-        font-size: 1.8rem;
-        transform: none;
-      }
-
-      .login-form {
-        width: 100%;
-        max-width: 360px;
-        transform: none;
-      }
-
-      .navbar-container {
-        flex-direction: column;
-        gap: 15px;
-      }
-
-      .navbar-left-section {
-        width: 100%;
-        justify-content: space-between;
-      }
-
-      .navbar-center-section {
-        width: 100%;
-        order: 3;
-        margin: 0;
-      }
-
-      .navbar-right-section {
-        width: 100%;
-        justify-content: center;
-      }
-
-      .search-box {
-        width: 100%;
-        max-width: 100%;
-      }
-    }
-  </style>
-</head>
-<body>
-
-  <!-- Header dengan search bar memanjang -->
-  <nav class="navbar navbar-light bg-white border-bottom shadow-sm px-3">
-    <div class="container-fluid">
-      <div class="navbar-container">
-        <!-- Bagian kiri: Logo + Kategori -->
-        <div class="navbar-left-section">
-          <a class="navbar-brand" href="{{ route('login') }}">
-            TOKO BERKAH<br>ELEKTRONIK
-          </a>
-          <span class="category-text">Kategori</span>
-        </div>
-
-        <!-- Bagian tengah: Search bar memanjang -->
-        <div class="navbar-center-section">
-          <input type="text" class="form-control form-control-sm search-box" placeholder="Cari Elektronik">
-        </div>
-
-        <!-- Bagian kanan: Icons -->
-        <div class="navbar-right-section">
-          <i class="bi bi-cart3" style="font-size: 1.2rem;"></i>
-          <i class="bi bi-person" style="font-size: 1.2rem;"></i>
-        </div>
+@section('content')
+<section class="login-section container">
+  <div class="row justify-content-center align-items-center" style="min-height: 80vh;">
+    {{-- Kolom Kiri: Deskripsi --}}
+    <div class="col-lg-5 col-md-6 mb-4">
+      <div class="login-text">
+        <h2 class="fw-bold mb-3" style="font-size: 32px; color: #333;">
+          Silahkan masuk ke akun anda
+        </h2>
+        <p class="mb-2" style="color: #666; font-size: 14px;">
+          Alamat email yang terverifikasi
+        </p>
+        <p style="font-size: 14px;">
+          <span style="color: #007bff;">contoh@email.com</span>
+        </p>
       </div>
     </div>
-  </nav>
-
-  <!-- Login Section -->
-  <section class="login-section container mt-5 mb-5">
-    <div class="login-text">
-      <p>Silahkan masuk<br>ke akun anda</p>
-    </div>
-
-    <div class="login-form">
-      {{-- Form login --}}
-      <form method="POST" action="{{ route('login.post') }}">
-        @csrf
-        
-        {{-- Email / HP --}}
-        <div class="mb-3">
-          <label class="form-label">Alamat email atau nomor handphone yang terverifikasi <span class="text-danger">*</span></label>
-          <input type="text" class="form-control" name="email" placeholder="contoh@email.com atau 08123456789" required value="{{ old('email') }}">
-          <div class="form-text">Masukkan email atau no handphone</div>
-          @error('email')
-            <small class="text-danger">{{ $message }}</small>
-          @enderror
-        </div>
-
-        {{-- Password --}}
-        <div class="mb-3">
-          <label class="form-label">Kata Sandi <span class="text-danger">*</span></label>
-          <div class="input-group">
-            <input type="password" class="form-control" name="password" placeholder="Kata sandi" required>
-            <span class="input-group-text bg-white border-start-0"><i class="bi bi-eye"></i></span>
+    
+    {{-- Kolom Kanan: Form --}}
+    <div class="col-lg-5 col-md-6">
+      <div class="login-form">
+        <form method="POST" action="{{ route('login.post') }}">
+          @csrf
+          
+          {{-- Email --}}
+          <div class="mb-4">
+            <label class="form-label fw-medium mb-2" style="color: #333; font-size: 14px;">
+              Masukan email
+            </label>
+            <input 
+              type="email" 
+              class="form-control" 
+              name="email" 
+              placeholder="contoh@email.com" 
+              required 
+              value="{{ old('email') }}"
+              style="border-radius: 8px; padding: 12px 16px; border: 1px solid #ddd;"
+            >
+            @error('email')
+              <small class="text-danger d-block mt-1">{{ $message }}</small>
+            @enderror
           </div>
-          <div class="form-text"><a href="{{ route('reset.password') }}" class="text-decoration-none text-secondary">Lupa kata sandi?</a></div>
-          @error('password')
-            <small class="text-danger">{{ $message }}</small>
-          @enderror
-        </div>
 
-        {{-- Tombol login --}}
-        <div class="d-grid mb-3">
-          <button type="submit" class="btn btn-login">Masuk</button>
-        </div>
+          {{-- Password --}}
+          <div class="mb-3">
+            <label class="form-label fw-medium mb-2" style="color: #333; font-size: 14px;">
+              Kata Sandi
+            </label>
+            <div class="input-group">
+              <input 
+                type="password" 
+                class="form-control" 
+                name="password" 
+                placeholder="Kata sandi" 
+                required 
+                id="passwordInput"
+                style="border-radius: 8px 0 0 8px; padding: 12px 16px; border: 1px solid #ddd; border-right: none;"
+              >
+              <button 
+                class="btn btn-outline-secondary" 
+                type="button" 
+                id="togglePassword"
+                style="border-radius: 0 8px 8px 0; border: 1px solid #ddd; border-left: none; background-color: #f8f9fa;"
+              >
+                <i class="bi bi-eye"></i>
+              </button>
+            </div>
+            <div class="mt-2">
+              <a href="{{ route('reset.password') }}" class="text-decoration-none" style="color: #2948ff; font-size: 14px;">
+                Lupa kata sandi?
+              </a>
+            </div>
+            @error('password')
+              <small class="text-danger d-block mt-1">{{ $message }}</small>
+            @enderror
+          </div>
 
-        {{-- Tombol daftar --}}
-        <div class="d-grid">
-          <a href="{{ route('register') }}" class="btn btn-register text-decoration-none text-center">Daftar sekarang?</a>
-        </div>
-      </form>
+          {{-- Pesan Error/Success --}}
+          @if(session('error'))
+            <div class="alert alert-danger py-2 mb-3" style="font-size: 14px; border-radius: 8px;">
+              {{ session('error') }}
+            </div>
+          @endif
+          
+          @if(session('success'))
+            <div class="alert alert-success py-2 mb-3" style="font-size: 14px; border-radius: 8px;">
+              {{ session('success') }}
+            </div>
+          @endif
+
+          {{-- Tombol Masuk --}}
+          <div class="d-grid mb-3">
+            <button 
+              type="submit" 
+              class="btn fw-semibold"
+              style="
+                background-color: #2948ff; 
+                color: #fff; 
+                border-radius: 8px;
+                border: none;
+                font-size: 16px;
+                padding: 14px;
+                transition: background-color 0.2s;
+              "
+              onmouseover="this.style.backgroundColor='#1c36cc'"
+              onmouseout="this.style.backgroundColor='#2948ff'"
+            >
+              Masuk
+            </button>
+          </div>
+
+          {{-- Divider atau pemisah --}}
+          <div class="position-relative text-center my-4">
+            <hr style="border-color: #eee; margin: 0;">
+            <span style="
+              position: absolute; 
+              top: -10px; 
+              background: white; 
+              padding: 0 16px; 
+              color: #666; 
+              font-size: 14px;
+              left: 50%;
+              transform: translateX(-50%);
+            ">
+              atau
+            </span>
+          </div>
+
+          {{-- Tombol Daftar --}}
+          <div class="d-grid">
+            <a 
+              href="{{ route('register') }}" 
+              class="btn fw-semibold text-decoration-none"
+              style="
+                border-radius: 8px; 
+                border: 1.5px solid #333; 
+                color: #333; 
+                background: #fff; 
+                font-size: 16px;
+                padding: 14px;
+                transition: all 0.2s;
+              "
+              onmouseover="this.style.borderColor='#2948ff'; this.style.color='#2948ff'"
+              onmouseout="this.style.borderColor='#333'; this.style.color='#333'"
+            >
+              Daftar sekarang?
+            </a>
+          </div>
+        </form>
+      </div>
     </div>
-  </section>
+  </div>
+</section>
 
-</body>
-</html>
+<style>
+  body {
+    background-color: #fff;
+  }
+  
+  .login-section {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .form-control:focus {
+    border-color: #2948ff;
+    box-shadow: 0 0 0 0.2rem rgba(41, 72, 255, 0.15);
+  }
+  
+  @media (max-width: 768px) {
+    .login-section {
+      padding: 20px;
+    }
+    
+    .login-text {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .login-text h2 {
+      font-size: 28px !important;
+    }
+  }
+</style>
+
+<script>
+  // Toggle show/hide password
+  document.getElementById('togglePassword')?.addEventListener('click', function() {
+    const passwordInput = document.getElementById('passwordInput');
+    const icon = this.querySelector('i');
+    
+    if (passwordInput.type === 'password') {
+      passwordInput.type = 'text';
+      icon.classList.remove('bi-eye');
+      icon.classList.add('bi-eye-slash');
+    } else {
+      passwordInput.type = 'password';
+      icon.classList.remove('bi-eye-slash');
+      icon.classList.add('bi-eye');
+    }
+  });
+
+  // Validasi form
+  document.querySelector('form')?.addEventListener('submit', function(e) {
+    const emailInput = this.querySelector('input[name="email"]');
+    const passwordInput = document.getElementById('passwordInput');
+    
+    if (!emailInput.value.trim()) {
+      e.preventDefault();
+      alert('Masukkan email');
+      emailInput.focus();
+      return;
+    }
+    
+    // Validasi format email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(emailInput.value)) {
+      e.preventDefault();
+      alert('Format email tidak valid');
+      emailInput.focus();
+      return;
+    }
+    
+    if (!passwordInput.value.trim()) {
+      e.preventDefault();
+      alert('Masukkan kata sandi');
+      passwordInput.focus();
+      return;
+    }
+  });
+</script>
+@endsection
