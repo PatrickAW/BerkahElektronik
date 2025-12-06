@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,45 +10,22 @@ class Product extends Model
     use HasFactory;
 
     protected $fillable = [
-        'kategori', 
-        'brand', 
-        'judul',   
-        'model',
-        'stok',   
-        'harga',    
-        'diskon',   
-        'garansi', 
-        'detail', 
-        'image' 
+        'kategori', 'brand', 'judul', 'model', 'stok', 
+        'harga', 'diskon', 'harga_akhir', 'garansi', 'detail', 'image'
     ];
-    
-    // Accessor untuk URL gambar lengkap 
-    public function getImageUrlAttribute()
+
+    // Relasi ke cart
+    public function carts()
     {
-        if ($this->image) {
-            return asset('storage/' . $this->image);
-        }
-        return null;
-    }
-    
-    public function category()
-    {
-        return $this->belongsTo(Category::class, 'kategori'); 
+        return $this->hasMany(Cart::class);
     }
 
+    // Attribute accessor untuk harga diskon
     public function getHargaAkhirAttribute()
     {
-        $harga = $this->attributes['harga'];
-        $diskon = $this->attributes['diskon'] ?? 0; 
-
-        $harga_akhir = $harga - ($harga * $diskon / 100);
-
-        return $harga_akhir;
-    }
-
-    // Scope untuk mendapatkan produk terbaru
-    public function scopeTerbaru($query)
-    {
-        return $query->orderBy('id', 'desc')->limit(1);
+        if ($this->diskon > 0) {
+            return $this->harga - ($this->harga * $this->diskon / 100);
+        }
+        return $this->harga;
     }
 }

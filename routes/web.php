@@ -1,17 +1,19 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CartController;
 
+// Home
 Route::get('/', function () {
-    return redirect('/products');
+    return redirect()->route('products.index');
 });
 
-Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-Route::get('/products/search', [ProductController::class, 'search'])->name('products.search');
-Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
-Route::post('/products', [ProductController::class, 'store'])->name('products.store');
-Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
-Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update');
-Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
+// Products
 Route::resource('products', ProductController::class);
+
+// Cart (SIMPLE)
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('/cart/add/{product}', [CartController::class, 'store'])->name('cart.add');
+Route::post('/cart/update/{cart}', [CartController::class, 'update'])->name('cart.update');
+Route::delete('/cart/remove/{cart}', [CartController::class, 'destroy'])->name('cart.remove');
+Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');

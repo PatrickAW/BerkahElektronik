@@ -6,23 +6,22 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up(): void
+    public function up()
     {
-        Schema::table('products', function (Blueprint $table) {
-            // Cek dan tambah hanya kolom yang belum ada
-            $columnsToAdd = [
-                'is_active' => ['type' => 'boolean', 'default' => true, 'after' => 'image'],
-                // Tambahkan kolom lain jika diperlukan
-            ];
-            
-            foreach ($columnsToAdd as $columnName => $config) {
-                if (!Schema::hasColumn('products', $columnName)) {
-                    if ($config['type'] === 'boolean') {
-                        $table->boolean($columnName)->default($config['default'])->after($config['after']);
-                    }
-                    // Tambahkan tipe data lain jika diperlukan
-                }
-            }
+        Schema::create('products', function (Blueprint $table) {
+            $table->id();
+            $table->string('kategori'); // ini harus ada
+            $table->string('brand');
+            $table->string('judul');
+            $table->string('model');
+            $table->integer('stok')->default(0);
+            $table->decimal('harga', 15, 2);
+            $table->integer('diskon')->default(0);
+            $table->decimal('harga_akhir', 15, 2);
+            $table->string('garansi');
+            $table->text('detail')->nullable();
+            $table->string('image')->nullable();
+            $table->timestamps();
         });
     }
 
